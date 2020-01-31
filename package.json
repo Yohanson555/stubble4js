@@ -1,6 +1,6 @@
 {
   "name": "stubble4js",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "Stubble realization for javascript",
   "main": "index.js",
   "scripts": {

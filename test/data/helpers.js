@@ -1,4 +1,4 @@
-const Stubble = require('../../src/stubble/Stubble');
+const Stubble = require('../../src/Stubble');
 const moment = require('moment');
 
 const initHelpers = () => {
