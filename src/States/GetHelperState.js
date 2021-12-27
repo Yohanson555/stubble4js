@@ -21,7 +21,7 @@ class GetHelperState extends StubbleState {
     this._attributes = [];
   }
 
-  init(msg, context) {
+  init(/* msg, context */) {
     this._helper = '';
     this._attributes = [];
 
@@ -30,7 +30,7 @@ class GetHelperState extends StubbleState {
     });
   }
 
-  process(msg, context) {
+  process(msg, /* context */) {
     let charCode = msg.charCode;
 
     if (charCode == chars.CLOSE_BRACKET) {

@@ -65,21 +65,21 @@ class GetBlockHelperState extends StubbleState {
       case notifies.NOTIFY_BLOCK_END_RESULT:
         this._body = msg.value;
 
-        if (!context.callable(this._helper)) {
-          return new StubbleResult({
-            pop: true,
-            err: new StubbleError(
-              errors.ERROR_HELPER_UNREGISTERED,
-              `Helper "${this._helper}" is unregistered`,
-            ),
-          });
-        }
-
         return this.result(context);
     }
   }
 
   result(context) {
+    if (!context.callable(this._helper)) {
+      return new StubbleResult({
+        pop: true,
+        err: new StubbleError(
+          errors.ERROR_HELPER_UNREGISTERED,
+          `Helper "${this._helper}" is unregistered`,
+        ),
+      });
+    }
+    
     let result = new StubbleResult({});
 
     try {
@@ -91,7 +91,9 @@ class GetBlockHelperState extends StubbleState {
       result.pop = true;
     } catch (e) {
       console.error(e);
-      result.err = new StubbleError(errors.ERROR_CALLING_HELPER, `Helper "${this._helper}" error: ${e.toString()}`);
+      result.err = new StubbleError(
+        errors.ERROR_CALLING_HELPER, 
+        `Helper "${this._helper}" error: ${e.toString()}`);
     }
 
     return result;

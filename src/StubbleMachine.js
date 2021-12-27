@@ -17,7 +17,7 @@ class StubbleMachine {
     this._stack = [];
     this._res = '';
     this._stack.push(new RootState());
-    
+
 
     if (this._template) {
       let lines = this._template.split('\n');
@@ -30,7 +30,7 @@ class StubbleMachine {
           let s = _.last(this._stack);
           this._symbol = i;
           let charCode = line.charCodeAt(i);
-          
+
           context.symbol = this._symbol;
           context.line = this._line;
 
@@ -39,12 +39,12 @@ class StubbleMachine {
           this._process(new ProcessMessage(charCode), context);
         }
 
-        this._process(new ProcessMessage(CHARS.EOS), context);
-
         if (l < lines.length - 1) {
           this._process(new ProcessMessage(CHARS.ENTER), context);
         }
       }
+
+      this._process(new ProcessMessage(CHARS.EOS), context);
     }
 
     return this._res;
@@ -54,6 +54,7 @@ class StubbleMachine {
     let state = _.last(this._stack)
 
     if (state != null && state.canAcceptMessage(msg)) {
+      console.log(state.getName());
       let res = state[msg.getName()](msg, context);
 
       if (res != null) {
@@ -81,7 +82,7 @@ class StubbleMachine {
 
     if (r.err) {
       if (context.opt('ignoreUnregisteredHelperErrors') === true && r.err.code === ERROR_HELPER_UNREGISTERED) {
-            console.log('Warning: ${r.err}');
+        console.log(`Warning: ${r.err.text}`);
       } else {
         let e = `Error (${r.err.code}) on ${this._currentLine()}:${this._symbol} ${r.err.text}`;
 

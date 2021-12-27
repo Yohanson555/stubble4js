@@ -1,10 +1,10 @@
 {
   "name": "stubble4js",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Stubble realization for javascript",
   "main": "index.js",
   "scripts": {
-    "test": "nyc --reporter=html mocha",
+    "test": "mocha",
     "start": "node index.js"
   },
   "repository": {
@@ -23,7 +23,10 @@
   "homepage": "https://github.com/Yohanson555/stubble4js#readme",
   "dependencies": {
     "esm": "^3.2.25",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.21",
     "moment": "^2.24.0"
+  },
+  "devDependencies": {
+    "mocha": "^9.1.3"
   }
 }

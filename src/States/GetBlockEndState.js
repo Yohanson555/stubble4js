@@ -12,13 +12,13 @@ class GetBlockEndState extends StubbleState {
   constructor(blockName) {
     super();
 
-    this._blockName = blockName;
-    this._search = false;
-    this._esc = false;
-    this._look = '';
-    this._tmp = '';
-    this._body = '';
-    this._count = 0;
+    this._blockName = blockName; // block name
+    this._search = false; // is in close tag searching mode 
+    this._esc = false; // is escaped character
+    this._look = ''; // lookig for tag tpl
+    this._tmp = ''; // tmp body
+    this._body = ''; // collected body
+    this._count = 0; // total character position in searched closed tag
   }
 
   process(msg, context) {
@@ -35,7 +35,7 @@ class GetBlockEndState extends StubbleState {
       this._tmp += String.fromCharCode(charCode);
 
       let l = this._look;
-      let t = this._tmp
+      let t = this._tmp;
 
       let op = context.opt('ignoreTagCaseSensetive');
 

@@ -138,7 +138,7 @@ describe('Stubble methods tests', () => {
     assert.equal(stubble.helperCount(), 2);
   });
 
-  it('Registering thirn helper', () => {
+  it('Registering third helper', () => {
     var res = stubble.registerHelper('testHelper3', (attr, fn) => { });
 
     assert.ok(res);
@@ -152,7 +152,7 @@ describe('Stubble methods tests', () => {
     assert.equal(stubble.helperCount(), 2);
   });
 
-  it('Tring to remove already removed helper', () => {
+  it('Trying to remove already removed helper', () => {
     var res = stubble.removeHelper('testHelper2');
 
     assert.equal(res, false);
@@ -429,7 +429,7 @@ describe('Simple handlers templates test', () => {
 
   stubble.registerHelper('attrByNum', (attrs, fn) => {
     var index = attrs[0];
-    console.log('index: ', index);
+
     if (index === null || index === undefined) {
       throw new Error('Index is undefined');
     }
@@ -443,7 +443,7 @@ describe('Simple handlers templates test', () => {
 
   stubble.registerHelper('attrByNum2', (attrs, fn) => {
     var index = attrs[0];
-    console.log('index: ', index);
+
     if (index === null || index === undefined) {
       throw new Error('Index is undefined');
     }
@@ -682,15 +682,6 @@ describe('Block helpers templates test', () => {
       }
     );
 
-  });
-
-  it('Unterminatred block helper #3', () => {
-    assert.throws(
-      () => stubble.compile('{{#multyStrings 3 ')({}),
-      {
-        message: `Error (17) on 1:17 Unterminated block helper "multyStrings" at 1:15`
-      }
-    );
   });
 
   it('Unterminatred block helper #3', () => {
@@ -978,6 +969,34 @@ describe('Block EACH templates test', () => {
     };
 
     assert.equal(stubble.compile(tpl)(data), '1;2;3;4;');
+  });
+
+
+  it('Calling nested EACH', () => {
+    var tpl = '{{#each A}}{{n}}:{{#each B}}{{n}};{{/each}}{{/each}}';
+    var data = {
+      'A': [
+        {
+          'n': 'A1',
+          'B': [
+            { 'n': 'B1' },
+            { 'n': 'B2' },
+            { 'n': 'B3' }
+          ]
+        },
+        {
+          'name': 'A2',
+          'B': [
+            { 'n': 'B4' },
+            { 'n': 'B5' },
+            { 'n': 'B6' }
+          ]
+        }
+      ]
+    };
+
+    assert.equal(stubble.compile(tpl)(data), 'A1:B1;B2;B3;A2:B4;B5;B6;');
+
   });
 
   it('Calling EACH block without path', () => {

@@ -73,18 +73,20 @@ class GetIfBlockState extends StubbleState {
   result(context) {
     var res = '';
 
-    if (this._res == true) {
-      try {
-        let fn = context.compile(this._body);
-        res = fn(context.data());
-      } catch (e) {
-        return new StubbleResult({
-          err: new StubbleError(
-            errors.ERROR_IF_BLOCK_MALFORMED,
-            `If block error: ${e}`)
+    try {
+      let fn = context.compile(this._body);
+      res = fn(context.data());
+    } catch (e) {
+      return new StubbleResult({
+        err: new StubbleError(
+          errors.ERROR_IF_BLOCK_MALFORMED,
+          `If block error: ${e}`)
 
-        });
-      }
+      });
+    }
+
+    if (this._res !== true) {
+      res = '';
     }
 
     return new StubbleResult({
