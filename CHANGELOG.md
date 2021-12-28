@@ -10,3 +10,7 @@ Available options:
 ## v 1.0.4
 
 - one string template bug fixed
+
+## v 1.1.0
+
+- nested same named blocks available now

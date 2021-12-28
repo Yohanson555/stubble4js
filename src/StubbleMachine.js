@@ -54,7 +54,6 @@ class StubbleMachine {
     let state = _.last(this._stack)
 
     if (state != null && state.canAcceptMessage(msg)) {
-      console.log(state.getName());
       let res = state[msg.getName()](msg, context);
 
       if (res != null) {

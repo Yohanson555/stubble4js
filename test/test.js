@@ -808,6 +808,17 @@ describe('Block IF templates test', () => {
     assert.equal(res, 'true');
   });
 
+  it('Calling nested IF', () => {
+    var tpl = '{{#if A == 1}}A{{#if B == 2}}-B{{#if C == 4}}-C{{/if}}{{/if}}{{/if}}';
+    var data = {
+      'A': 1,
+      'B': 2,
+      'C': 3,
+    };
+
+    assert.equal(stubble.compile(tpl)(data), 'A-B');
+  });
+
   /// incorrect if blocks
   ///
   it('Wrong IF block #1', () => {
@@ -969,6 +980,33 @@ describe('Block EACH templates test', () => {
     };
 
     assert.equal(stubble.compile(tpl)(data), '1;2;3;4;');
+  });
+
+
+  it('Calling nested EACH', () => {
+    var tpl = '{{#each A}}{{n}}:{{#each B}}{{n}};{{/each}}{{/each}}';
+    var data = {
+      'A': [
+        {
+          'n': 'A1',
+          'B': [
+            { 'n': 'B1' },
+            { 'n': 'B2' },
+            { 'n': 'B3' }
+          ]
+        },
+        {
+          'n': 'A2',
+          'B': [
+            { 'n': 'B4' },
+            { 'n': 'B5' },
+            { 'n': 'B6' }
+          ]
+        }
+      ]
+    };
+
+    assert.equal(stubble.compile(tpl)(data), 'A1:B1;B2;B3;A2:B4;B5;B6;');
   });
 
   it('Calling EACH block without path', () => {

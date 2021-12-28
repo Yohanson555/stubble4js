@@ -43,7 +43,6 @@ class RootState extends StubbleState {
       }
     }
 
-
     return res;
   }
 
