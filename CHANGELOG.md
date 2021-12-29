@@ -14,3 +14,7 @@ Available options:
 ## v 1.1.0
 
 - nested same named blocks available now
+
+## v 1.1.1
+
+- Bug fix: there was a problem with multy attributes on custom block helpers. Now it's fixed.

@@ -77,13 +77,7 @@ class Stubble {
   }
 
   setOption(name, value) {
-    console.log('options before');
-    console.log(this._options);
-
     this._options[name] = value;
-
-    console.log('options after');
-    console.log(this._options);
   }
 }
 

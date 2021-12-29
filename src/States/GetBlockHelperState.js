@@ -58,9 +58,13 @@ class GetBlockHelperState extends StubbleState {
       case notifies.NOTIFY_ATTR_RESULT:
         this._attributes.push(msg.value);
 
-        return new StubbleResult({
-          message: new ProcessMessage(msg.charCode)
-        });
+        if (msg.charCode != null) {
+          return new StubbleResult({
+            message: new ProcessMessage(msg.charCode)
+          });
+        }
+
+        break;
 
       case notifies.NOTIFY_BLOCK_END_RESULT:
         this._body = msg.value;
