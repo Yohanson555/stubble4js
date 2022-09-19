@@ -1,1 +1,1 @@
-module.exports = require('./src/Stubble.js')
+module.exports = require('./dist/Stubble.js')
