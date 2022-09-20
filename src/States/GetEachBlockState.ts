@@ -48,6 +48,10 @@ export class GetEachBlockState implements StubbleState {
       return this.process(msg, context);
     }
 
+    if (msg instanceof NotifyMessage) {
+      return this.notify(msg, context);
+    }
+
     return null;
   }
 
@@ -75,7 +79,7 @@ export class GetEachBlockState implements StubbleState {
     };
   }
 
-  notify(msg: NotifyMessage, context: StubbleContext) {
+  notify(msg: NotifyMessage, context: StubbleContext): StubbleResult | null {
     switch (msg.type) {
       case notifies.NOTIFY_PATH_RESULT:
         this._path = msg.value;
@@ -93,6 +97,8 @@ export class GetEachBlockState implements StubbleState {
         this._body = msg.value;
         return this.result(context);
     }
+
+    return null;
   }
 
   result(context: StubbleContext): StubbleResult {

@@ -38,8 +38,6 @@ export class StubbleMachine {
           context.symbol = this._symbol;
           context.line = this._line;
 
-          //console.log(`State is ${s.getName()}; Character is ${String.fromCharCode(charCode)}`);
-
           this._process(new ProcessMessage(charCode), context);
         }
 
@@ -57,8 +55,11 @@ export class StubbleMachine {
   _process(msg: StubbleMessage, context: StubbleContext) {
     let state = _.last(this._stack);
 
-    if (state != null && state.canAcceptMessage(msg)) {
+    // console.log(
+    //   `State is ${state?.getName()}; Message is "${msg.getName()}"; charCode ${msg.getCode()}`
+    // );
 
+    if (state != null && state.canAcceptMessage(msg)) {
       let res = state.handleMessage(msg, context);
 
       //let res = typeof state["init"] === "function" ? state[msg.getName()](msg, context) : null;

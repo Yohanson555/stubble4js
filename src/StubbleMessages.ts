@@ -1,12 +1,18 @@
 export interface StubbleMessage {
   getName(): string;
+
+  getCode(): string;
 }
 
 export class InitMessage implements StubbleMessage {
-  constructor(readonly value?: any) {}
+  constructor(readonly value?: any, ) {}
 
   getName() {
     return "init";
+  }
+
+  getCode() {
+    return "-";
   }
 }
 
@@ -15,6 +21,10 @@ export class ProcessMessage implements StubbleMessage {
 
   getName() {
     return "process";
+  }
+
+  getCode() {
+    return String.fromCharCode(this.charCode);
   }
 }
 
@@ -27,5 +37,9 @@ export class NotifyMessage implements StubbleMessage {
 
   getName() {
     return "notify";
+  }
+
+  getCode() {
+    return '-';
   }
 }

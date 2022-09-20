@@ -18,3 +18,7 @@ Available options:
 ## v 1.1.1
 
 - Bug fix: there was a problem with multy attributes on custom block helpers. Now it's fixed.
+
+## v 2.0.0
+
+- Re-implemented with TypeScript 

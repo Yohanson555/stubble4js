@@ -37,9 +37,10 @@ export class GetBlockHelperState implements StubbleState {
   }
 
   canAcceptMessage(msg: StubbleMessage): boolean {
-    if (msg instanceof ProcessMessage) {
+    if (msg instanceof ProcessMessage || msg instanceof NotifyMessage) {
       return true;
     }
+
 
     return false;
   }

@@ -8,7 +8,7 @@ const groupBy = (attrs: any[], fn: CompillerFunction) => {
   let groupField = _.isString(attrs[1]) ? attrs[1] : "";
   let order = attrs[2] === "desc" ? "desc" : "asc";
 
-  let groups:{[key: string]: string[]} = {};
+  let groups: { [key: string]: any[] } = {};
 
   if (items.length <= 0 && !groupField) {
     return "";
@@ -21,7 +21,7 @@ const groupBy = (attrs: any[], fn: CompillerFunction) => {
       groups[v] = [];
     }
 
-    groups[v].push(item.toString());
+    groups[v].push(item);
   });
 
   let keys = _.keys(groups);
@@ -64,7 +64,7 @@ function sum(attrs: any[], fn: CompillerFunction) {
     });
   }
 
-  return sum.toFixed(2);
+  return sum.toString();
 }
 
 describe("Custom helpers test", () => {
