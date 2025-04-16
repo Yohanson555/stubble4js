@@ -6,13 +6,14 @@
 ### Example
 
 ```javascript
-  let s = Stubble();
+  const { Stubble } = require('stubble4js');
+  let s = new Stubble();
   let template = 'Hello! I\'m {{name}}! Nice to meet you!' ;
   let data = {'name': 'Stubble'};
 
-  final fn = s.compile(template);
+  let fn = s.compile(template);
 
-  console.log(fn(data)); // prints "Hello! I'm Stubble! Nice to meet you!"
+  console.log(fn(data)); 
 ```
 
 ### Stubble constructions
