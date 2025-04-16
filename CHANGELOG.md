@@ -3,9 +3,7 @@
 - New error types added.
 - Stubble options can be passed to `Stubble()` by the second parameter:
 
-Available options:
-    - `ignoreUnregisteredHelperErrors` - ignore errors of 'Unregistered helpers'
-    - `ignoreTagCaseSensetive` - ignore case of open and close tags 
+Available options: - `ignoreUnregisteredHelperErrors` - ignore errors of 'Unregistered helpers' - `ignoreTagCaseSensetive` - ignore case of open and close tags
 
 ## v 1.0.4
 
@@ -21,8 +19,16 @@ Available options:
 
 ## v 2.0.0
 
-- Re-implemented with TypeScript 
+- Re-implemented with TypeScript
 
 ## v 2.0.1
 
 - Minor publish fix
+
+## v 2.1.0
+
+- Added support for left-hand conditions. Now the IF block conditions can contain only the left part of the condition.
+
+## v 2.1.1
+
+- EACH and WITH blocks are now has a default value for situations, when context value is null or undefined

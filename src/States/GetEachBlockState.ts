@@ -111,31 +111,24 @@ export class GetEachBlockState implements StubbleState {
       );
     } else {
       try {
-        let data = context.get(this._path);
+        let data = context.get(this._path) ?? [];
 
-        if (data) {
-          if (_.isArray(data) || _.isObject(data)) {
-            let fn = context.compile(this._body);
-            let res = "";
+        if (_.isArray(data) || _.isObject(data)) {
+          let fn = context.compile(this._body);
+          let res = "";
 
-            _.forEach(data, (item) => {
-              res += fn ? fn(item) : "";
-            });
+          _.forEach(data, (item) => {
+            res += fn ? fn(item) : "";
+          });
 
-            return {
-              result: res,
-              pop: true,
-            };
-          } else {
-            result.err = new StubbleError(
-              errors.ERROR_WITH_DATA_MALFORMED,
-              '"EACH" block data should have "Array" or "Object" type'
-            );
-          }
+          return {
+            result: res,
+            pop: true,
+          };
         } else {
           result.err = new StubbleError(
-            errors.ERROR_PATH_WRONG_SPECIFIED,
-            `Can\'t get data from context by path "${this._path}"`
+            errors.ERROR_WITH_DATA_MALFORMED,
+            '"EACH" block data should have "Array" or "Object" type'
           );
         }
       } catch (e: any) {

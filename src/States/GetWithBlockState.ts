@@ -112,26 +112,19 @@ export class GetWithBlockState implements StubbleState {
       );
     } else {
       try {
-        let data = context.get(this._path);
+        let data = context.get(this._path) ?? {};
 
-        if (data != null) {
-          if (_.isObject(data)) {
-            let fn = context.compile(this._body);
+        if (_.isObject(data)) {
+          let fn = context.compile(this._body);
 
-            return {
-              result: fn ? fn(data) : "",
-              pop: true,
-            };
-          } else {
-            result.err = new StubbleError(
-              errors.ERROR_WITH_DATA_MALFORMED,
-              '"With" block data should have "Object" type'
-            );
-          }
+          return {
+            result: fn ? fn(data) : "",
+            pop: true,
+          };
         } else {
           result.err = new StubbleError(
-            errors.ERROR_PATH_WRONG_SPECIFIED,
-            `Can\'t get data from context by path "${this._path}"`
+            errors.ERROR_WITH_DATA_MALFORMED,
+            '"With" block data should have "Object" type'
           );
         }
       } catch (e: any) {

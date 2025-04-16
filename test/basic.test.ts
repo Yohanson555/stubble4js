@@ -879,6 +879,94 @@ describe("Block IF templates test", () => {
     assert.equal(res, "true");
   });
 
+  // existing conditions
+
+  it("If block test #13 - existing condition ( A is number )", () => {
+    const tpl = "{{#if A}}true{{/if}}";
+    const res = stubble.compile(tpl)({ A: 10 });
+
+    assert.equal(res, "true");
+  });
+
+  it("If block test #14 - existing condition ( A is boolean )", () => {
+    const tpl = "{{#if A}}true{{/if}}";
+    const res = stubble.compile(tpl)({ A: true });
+
+    assert.equal(res, "true");
+  });
+
+  it("If block test #15 - existing condition ( A is string )", () => {
+    const tpl = "{{#if A}}true{{/if}}";
+    const res = stubble.compile(tpl)({ A: "Hello world" });
+
+    assert.equal(res, "true");
+  });
+
+  it("If block test #16 - no condition ( A is object)", () => {
+    const tpl = "{{#if A}}true{{/if}}";
+    const res = stubble.compile(tpl)({ A: {} });
+
+    assert.equal(res, "true");
+  });
+
+  it("If block test #17 - existing condition ( A is number, result - false )", () => {
+    const tpl = "{{#if A}}true{{/if}}";
+    const res = stubble.compile(tpl)({ A: 0 });
+
+    assert.equal(res, "");
+  });
+
+  it("If block test #18 - existing condition ( A is boolean, result - false )", () => {
+    const tpl = "{{#if A}}true{{/if}}";
+    const res = stubble.compile(tpl)({ A: false });
+
+    assert.equal(res, "");
+  });
+
+  it("If block test #19 - existing condition ( A is string, result - false )", () => {
+    const tpl = "{{#if A}}true{{/if}}";
+    const res = stubble.compile(tpl)({ A: "" });
+
+    assert.equal(res, "");
+  });
+
+  it("If block test #20 - existing condition ( A is null, result - false )", () => {
+    const tpl = "{{#if A}}true{{/if}}";
+    const res = stubble.compile(tpl)({ A: null });
+
+    assert.equal(res, "");
+  });
+
+  it("If block test #21 - existing condition ( A is undefined, result - false )", () => {
+    const tpl = "{{#if A}}true{{/if}}";
+    const res = stubble.compile(tpl)({});
+
+    assert.equal(res, "");
+  });
+
+  it("If block test #22 - existing condition ( A is NaN, result - false )", () => {
+    const tpl = "{{#if A}}true{{/if}}";
+    const res = stubble.compile(tpl)({ A: NaN });
+
+    assert.equal(res, "");
+  });
+
+  it("If block test #23 - existing condition ( A is NaN, result - false )", () => {
+    const tpl = "{{#if B.A}}true{{/if}}";
+    const res = stubble.compile(tpl)({ A: {} });
+
+    assert.equal(res, "");
+  });
+
+  it("If block test #24 with embedded WITH block ", () => {
+    const tpl = "{{#if B}}{{#each B.A}}value{{/each}}{{/if}}";
+    const res = stubble.compile(tpl)({ A: { C: [1, 2, 3] } });
+
+    assert.equal(res, "");
+  });
+
+  // **********************
+
   it("Calling nested IF", () => {
     const tpl =
       "{{#if A == 1}}A{{#if B == 2}}-B{{#if C == 4}}-C{{/if}}{{/if}}{{/if}}";
@@ -901,27 +989,11 @@ describe("Block IF templates test", () => {
     });
   });
 
-  it("Wrong IF block #2", () => {
-    const tpl = "{{#if A}}result{{/if}}";
-
-    assert.throws(() => stubble.compile(tpl)({}), {
-      message: `Error (15) on 1:7 If block condition malformed`,
-    });
-  });
-
   it("Wrong IF block #3", () => {
     const tpl = "{{#if A=}}result{{/if}}";
 
     assert.throws(() => stubble.compile(tpl)({}), {
       message: `Error (4) on 1:7 Character "=" is not a valid in path`,
-    });
-  });
-
-  it("Wrong IF block #4", () => {
-    const tpl = "{{#if A ==}}result{{/if}}";
-
-    assert.throws(() => stubble.compile(tpl)({}), {
-      message: `Error (15) on 1:10 If block condition malformed`,
     });
   });
 
@@ -987,18 +1059,6 @@ describe("Block WITH templates test", () => {
         }),
       {
         message: `Error (14) on 1:43 "With" block data should have "Object" type`,
-      }
-    );
-  });
-
-  it("With block wrong path ", () => {
-    assert.throws(
-      () =>
-        stubble.compile("{{#with Person}}{{fname}} {{sname}}{{/with}}")({
-          person: {},
-        }),
-      {
-        message: `Error (7) on 1:43 Can\'t get data from context by path "Person"`,
       }
     );
   });
@@ -1097,13 +1157,6 @@ describe("Block EACH templates test", () => {
       {
         message: `Error (14) on 1:27 "EACH" block data should have "Array" or "Object" type`,
       }
-    );
-  });
-
-  it("Calling EACH block with absent param", () => {
-    assert.throws(
-      () => stubble.compile("{{#each B}}{{num}};{{/each}}")({ A: [] }),
-      { message: `Error (7) on 1:27 Can\'t get data from context by path "B"` }
     );
   });
 

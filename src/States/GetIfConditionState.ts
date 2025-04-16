@@ -15,8 +15,8 @@ import { StubbleState } from "../StubbleState";
 import { StubbleContext } from "../StubbleContext";
 
 export class GetIfConditionState implements StubbleState {
-  private leftPart: any;
-  private rightPart: any;
+  private leftPart: any = "";
+  private rightPart: any = "";
   private condition: string = "";
 
   private _state = 0;
@@ -60,11 +60,19 @@ export class GetIfConditionState implements StubbleState {
       };
     } else if (charCode == chars.CLOSE_BRACKET) {
       return {
-        err: new StubbleError(
-          errors.ERROR_IF_BLOCK_MALFORMED,
-          "If block condition malformed"
+        pop: true,
+        message: new NotifyMessage(
+          notifies.NOTIFY_CONDITION_RESULT,
+          msg.charCode,
+          this.checkCondition()
         ),
       };
+      // return {
+      //   err: new StubbleError(
+      //     errors.ERROR_IF_BLOCK_MALFORMED,
+      //     "If block condition malformed"
+      //   ),
+      // };
     } else if (charCode == chars.SPACE) {
       return null;
     } else {
@@ -133,6 +141,12 @@ export class GetIfConditionState implements StubbleState {
 
   checkCondition(): boolean {
     const { condition, leftPart, rightPart } = this;
+
+    if (!leftPart) return false;
+
+    if (!condition) {
+      return !!leftPart;
+    }
 
     switch (condition) {
       case "<":
