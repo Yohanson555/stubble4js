@@ -22,3 +22,7 @@ Available options:
 ## v 2.0.0
 
 - Re-implemented with TypeScript 
+
+## v 2.0.1
+
+- Minor publish fix

@@ -1,8 +1,9 @@
 {
   "name": "stubble4js",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Stubble realization for javascript",
-  "main": "index.js",
+  "main": "dist/Stubble.js",
+  "typings": "dist/Stubble.d.ts",
   "scripts": {
     "test": "jest",
     "start": "node index.js",
