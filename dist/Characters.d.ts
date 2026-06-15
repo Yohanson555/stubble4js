@@ -1,0 +1,17 @@
+export declare const BACK_SLASH = 92;
+export declare const SLASH = 47;
+export declare const ENTER = 10;
+export declare const SPACE = 32;
+export declare const OPEN_BRACKET = 123;
+export declare const CLOSE_BRACKET = 125;
+export declare const DOLLAR = 36;
+export declare const SHARP = 35;
+export declare const UNDERSCORE = 95;
+export declare const DOT = 46;
+export declare const QUOTE = 34;
+export declare const SINGLE_QUOTE = 39;
+export declare const EOS = -1;
+export declare const MORE = 62;
+export declare const LESS = 60;
+export declare const EQUAL = 61;
+export declare const EXCL_MARK = 33;
