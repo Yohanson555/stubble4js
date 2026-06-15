@@ -35,7 +35,7 @@ export class GetIfConditionState implements StubbleState {
 
   handleMessage(
     msg: StubbleMessage,
-    context: StubbleContext
+    context: StubbleContext,
   ): StubbleResult | null {
     if (msg instanceof ProcessMessage) {
       return this.process(msg, context);
@@ -55,7 +55,7 @@ export class GetIfConditionState implements StubbleState {
       return {
         err: new StubbleError(
           errors.ERROR_UNEXPECTED_END_OF_SOURCE,
-          "unexpected end of source"
+          "unexpected end of source",
         ),
       };
     } else if (charCode == chars.CLOSE_BRACKET) {
@@ -64,7 +64,7 @@ export class GetIfConditionState implements StubbleState {
         message: new NotifyMessage(
           notifies.NOTIFY_CONDITION_RESULT,
           msg.charCode,
-          this.checkCondition()
+          this.checkCondition(),
         ),
       };
       // return {
@@ -114,7 +114,7 @@ export class GetIfConditionState implements StubbleState {
             message: new NotifyMessage(
               notifies.NOTIFY_CONDITION_RESULT,
               msg.charCode,
-              this.checkCondition()
+              this.checkCondition(),
             ),
           };
         }
@@ -141,8 +141,6 @@ export class GetIfConditionState implements StubbleState {
 
   checkCondition(): boolean {
     const { condition, leftPart, rightPart } = this;
-
-    if (!leftPart) return false;
 
     if (!condition) {
       return !!leftPart;

@@ -43,12 +43,12 @@ describe("States tests", () => {
     assert.equal(new GetBlockEndState("").getName(), "GetBlockEndState");
     assert.equal(
       new GetBlockHelperState("", 0, 0).getName(),
-      "GetBlockHelperState"
+      "GetBlockHelperState",
     );
     assert.equal(new GetBlockNameState().getName(), "GetBlockNameState");
     assert.equal(
       new GetBlockSequenceTypeState().getName(),
-      "GetBlockSequenceTypeState"
+      "GetBlockSequenceTypeState",
     );
     assert.equal(new GetConditionState().getName(), "GetConditionState");
     assert.equal(new GetDataState().getName(), "GetDataState");
@@ -58,17 +58,17 @@ describe("States tests", () => {
     assert.equal(new GetIfConditionState().getName(), "GetIfConditionState");
     assert.equal(
       new GetNumberAttributeState().getName(),
-      "GetNumberAttributeState"
+      "GetNumberAttributeState",
     );
     assert.equal(
       new GetPathAttributeState().getName(),
-      "GetPathAttributeState"
+      "GetPathAttributeState",
     );
     assert.equal(new GetPathState("").getName(), "GetPathState");
     assert.equal(new GetSequenceState().getName(), "GetSequenceState");
     assert.equal(
       new GetStringAttributeState(0).getName(),
-      "GetStringAttributeState"
+      "GetStringAttributeState",
     );
     assert.equal(new GetWithBlockState(0, 0).getName(), "GetWithBlockState");
     assert.equal(new OpenBracketState().getName(), "OpenBracketState");
@@ -205,7 +205,7 @@ describe("Stubble context tests", () => {
 
     assert.equal(
       context.call("simple", [], () => ""),
-      "Helper result"
+      "Helper result",
     );
   });
 
@@ -220,7 +220,7 @@ describe("Stubble context tests", () => {
 
     assert.equal(
       context.call("simple", [1, "String attr", {}, false], () => ""),
-      "Number of attributes is 4"
+      "Number of attributes is 4",
     );
   });
 
@@ -235,7 +235,7 @@ describe("Stubble context tests", () => {
 
     assert.equal(
       context.call("simple", [1, "String attr", {}, false], () => ""),
-      "Second attribute is String attr"
+      "Second attribute is String attr",
     );
   });
 
@@ -402,7 +402,7 @@ describe("Path templates test", () => {
       () => stubble.compile("{{#with 123someValue}}{{/with}}")({}),
       {
         message: `Error (7) on 1:8 Path should not start with number character`,
-      }
+      },
     );
   });
 
@@ -426,28 +426,28 @@ describe("Simple handlers templates test", () => {
     "simpleHelper",
     (attrs: any[], fn: CompillerFunction) => {
       return "Simple helper result";
-    }
+    },
   );
 
   stubble.registerHelper(
     "_simpleHelper",
     (attrs: any[], fn: CompillerFunction) => {
       return "Simple helper with first start slash result";
-    }
+    },
   );
 
   stubble.registerHelper(
     "simpleHelper_",
     (attrs: any[], fn: CompillerFunction) => {
       return "Simple helper with last start slash result";
-    }
+    },
   );
 
   stubble.registerHelper(
     "attrCountHelper",
     (attrs: any[], fn: CompillerFunction) => {
       return `Attrs count: ${attrs.length}`;
-    }
+    },
   );
 
   stubble.registerHelper("attrByNum", (attrs: any[], fn: CompillerFunction) => {
@@ -478,7 +478,7 @@ describe("Simple handlers templates test", () => {
       }
 
       return `2: Attrs is: ${attrs[index]}`;
-    }
+    },
   );
 
   it("Non-block helper call without registering it", () => {
@@ -493,7 +493,7 @@ describe("Simple handlers templates test", () => {
       {
         ignoreUnregisteredHelperErrors: true,
         ignoreTagCaseSensetive: false,
-      }
+      },
     );
 
     assert.equal(st.compile("A {{$helperName}} B")({}), "A  B");
@@ -502,54 +502,54 @@ describe("Simple handlers templates test", () => {
   it("assert.equal non-block helper call without attributes #1", () => {
     assert.equal(
       stubble.compile("{{$simpleHelper}}")({}),
-      "Simple helper result"
+      "Simple helper result",
     );
   });
 
   it("Correct non-block helper call without attributes #2", () => {
     assert.equal(
       stubble.compile("{{$_simpleHelper}}")({}),
-      "Simple helper with first start slash result"
+      "Simple helper with first start slash result",
     );
   });
 
   it("Correct non-block helper call without attributes #3", () => {
     assert.equal(
       stubble.compile("{{$simpleHelper_}}")({}),
-      "Simple helper with last start slash result"
+      "Simple helper with last start slash result",
     );
   });
 
   it("Correct non-block helper call with attributes #1", () => {
     assert.equal(
       stubble.compile('{{$attrCountHelper "first" 23 10.01 }}')({}),
-      "Attrs count: 3"
+      "Attrs count: 3",
     );
   });
 
   it("Correct non-block helper call with attributes #2", () => {
     assert.equal(
       stubble.compile('{{$attrCountHelper path "first" 23 10.01 }}')({}),
-      "Attrs count: 4"
+      "Attrs count: 4",
     );
   });
 
   it("Correct non-block helper call with attributes #3", () => {
     assert.equal(
       stubble.compile('{{$attrByNum 0 "first" 23 10.01 }}')({}),
-      "Attrs is: 0"
+      "Attrs is: 0",
     );
     assert.equal(
       stubble.compile('{{$attrByNum 1 "first" 23 10.01 }}')({}),
-      "Attrs is: first"
+      "Attrs is: first",
     );
     assert.equal(
       stubble.compile('{{$attrByNum 2 "first" 23 10.01 }}')({}),
-      "Attrs is: 23"
+      "Attrs is: 23",
     );
     assert.equal(
       stubble.compile('{{$attrByNum 3 "first" 23 10.01 }}')({}),
-      "Attrs is: 10.01"
+      "Attrs is: 10.01",
     );
   });
 
@@ -615,7 +615,7 @@ describe("Block helpers templates test", () => {
     "errorHelper",
     (attrs: any[], fn: CompillerFunction) => {
       throw new Error("Helper error!");
-    }
+    },
   );
 
   stubble.registerHelper(
@@ -624,7 +624,7 @@ describe("Block helpers templates test", () => {
       const data = { A: "First param", B: "Second param" };
 
       return fn(data);
-    }
+    },
   );
 
   stubble.registerHelper(
@@ -640,7 +640,7 @@ describe("Block helpers templates test", () => {
       }
 
       return res;
-    }
+    },
   );
 
   stubble.registerHelper(
@@ -656,7 +656,7 @@ describe("Block helpers templates test", () => {
       }
 
       return res;
-    }
+    },
   );
 
   stubble.registerHelper("multiply", (attrs: any[], fn: CompillerFunction) => {
@@ -680,36 +680,36 @@ describe("Block helpers templates test", () => {
   it("Calling simple block helper #1", () => {
     assert.equal(
       stubble.compile(
-        "{{#simpleBlockHelper}}{{A}}; {{B}}{{/simpleBlockHelper}}"
+        "{{#simpleBlockHelper}}{{A}}; {{B}}{{/simpleBlockHelper}}",
       )({ A: "First param", B: "Second param" }),
-      "First param; Second param"
+      "First param; Second param",
     );
   });
 
   it("Calling simple block helper #2", () => {
     assert.equal(
       stubble.compile(
-        "{{#simpleBlockHelper}}{{A}}; {{B}}{{/simpleBlockHelper}}"
+        "{{#simpleBlockHelper}}{{A}}; {{B}}{{/simpleBlockHelper}}",
       )({}),
-      "First param; Second param"
+      "First param; Second param",
     );
   });
 
   it("Calling simple block helper with attrs", () => {
     assert.equal(
       stubble.compile(
-        "{{#manyStrings 3}}{{index}}. String number {{index}}{{/manyStrings}}"
+        "{{#manyStrings 3}}{{index}}. String number {{index}}{{/manyStrings}}",
       )({}),
-      "1. String number 1;2. String number 2;3. String number 3;"
+      "1. String number 1;2. String number 2;3. String number 3;",
     );
   });
 
   it("Calling simple block helper with attrs and inner helper calls", () => {
     assert.equal(
       stubble.compile(
-        "{{#multyStrings 3 2}}{{index}}. String number {{$multiply index multy}}{{/multyStrings}}"
+        "{{#multyStrings 3 2}}{{index}}. String number {{$multiply index multy}}{{/multyStrings}}",
       )({}),
-      "1. String number 2;2. String number 4;3. String number 6;"
+      "1. String number 2;2. String number 4;3. String number 6;",
     );
   });
 
@@ -718,7 +718,7 @@ describe("Block helpers templates test", () => {
       () => stubble.compile("{{#getPrice 3 2}}{{price}}}{{/getPrice}}")({}),
       {
         message: `Error (18) on 1:39 Helper "getPrice" is unregistered`,
-      }
+      },
     );
   });
 
@@ -728,7 +728,7 @@ describe("Block helpers templates test", () => {
         stubble.compile("{{#errorHelper 3 2}}{{price}}}{{/errorHelper}}")({}),
       {
         message: `Error (9) on 1:45 Helper "errorHelper" error: Error: Helper error!`,
-      }
+      },
     );
   });
 
@@ -736,11 +736,11 @@ describe("Block helpers templates test", () => {
     assert.throws(
       () =>
         stubble.compile(
-          "{{#multyStrings 3 2}}{{index}}. String number {{$multiply index multy}}{{/multyStrings"
+          "{{#multyStrings 3 2}}{{index}}. String number {{$multiply index multy}}{{/multyStrings",
         )({}),
       {
         message: `Error (17) on 1:85 Unterminated block helper "multyStrings" at 1:15`,
-      }
+      },
     );
   });
 
@@ -750,7 +750,7 @@ describe("Block helpers templates test", () => {
         stubble.compile("{{#multyStrings 3 2}}{{index}}. String number")({}),
       {
         message: `Error (17) on 1:44 Unterminated block helper "multyStrings" at 1:15`,
-      }
+      },
     );
   });
 
@@ -765,9 +765,9 @@ describe("Block helpers templates test", () => {
 
     assert.equal(
       stubble.compile(
-        "{{#simpleBlockHelper}}{{A}}; {{B}}{{/SimpleBlockHelper}}"
+        "{{#simpleBlockHelper}}{{A}}; {{B}}{{/SimpleBlockHelper}}",
       )({}),
-      "First param; Second param"
+      "First param; Second param",
     );
 
     stubble.setOption("ignoreTagCaseSensetive", false);
@@ -776,16 +776,16 @@ describe("Block helpers templates test", () => {
   it("Calling nested block helpers", () => {
     assert.equal(
       stubble.compile("{{#ABC}}My name is {{#abc}}{{name}}{{/abc}}{{/ABC}}")(
-        {}
+        {},
       ),
-      "My name is John"
+      "My name is John",
     );
   });
 
   it("Calling block helpers with escaped characters", () => {
     assert.equal(
       stubble.compile("{{#ABC}}My name is \\!{{/ABC}}")({}),
-      "My name is !"
+      "My name is !",
     );
   });
 });
@@ -979,6 +979,36 @@ describe("Block IF templates test", () => {
     assert.equal(stubble.compile(tpl)(data), "A-B");
   });
 
+  // falsy left-hand value with comparison (regression: !leftPart short-circuit)
+
+  it("If block falsy left #1 - A == 0 when A is 0", () => {
+    const tpl = "{{#if A == 0}}true{{/if}}";
+    const res = stubble.compile(tpl)({ A: 0 });
+
+    assert.equal(res, "true");
+  });
+
+  it("If block falsy left #2 - A < 5 when A is 0", () => {
+    const tpl = "{{#if A < 5}}true{{/if}}";
+    const res = stubble.compile(tpl)({ A: 0 });
+
+    assert.equal(res, "true");
+  });
+
+  it('If block falsy left #3 - A == "" when A is ""', () => {
+    const tpl = '{{#if A == ""}}true{{/if}}';
+    const res = stubble.compile(tpl)({ A: "" });
+
+    assert.equal(res, "true");
+  });
+
+  it("If block falsy left #4 - A != 1 when A is 0", () => {
+    const tpl = "{{#if A != 1}}true{{/if}}";
+    const res = stubble.compile(tpl)({ A: 0 });
+
+    assert.equal(res, "true");
+  });
+
   /// incorrect if blocks
   ///
   it("Wrong IF block #1", () => {
@@ -1047,7 +1077,9 @@ describe("Block WITH templates test", () => {
   it("With block with empty path", () => {
     assert.throws(
       () => stubble.compile("{{#with}}{{fname}} {{sname}}{{/with}}")({}),
-      { message: `Error (13) on 1:36 With block required path to context data` }
+      {
+        message: `Error (13) on 1:36 With block required path to context data`,
+      },
     );
   });
 
@@ -1059,28 +1091,28 @@ describe("Block WITH templates test", () => {
         }),
       {
         message: `Error (14) on 1:43 "With" block data should have "Object" type`,
-      }
+      },
     );
   });
 
   it("Unterminated WITH block test #1", () => {
     assert.throws(
       () => stubble.compile("{{#with Person}}{{fname}} {{sname}}{{/with}")({}),
-      { message: `Error (17) on 1:42 Unterminated "WITH" block at 1:7` }
+      { message: `Error (17) on 1:42 Unterminated "WITH" block at 1:7` },
     );
   });
 
   it("Unterminated WITH block test #2", () => {
     assert.throws(
       () => stubble.compile("{{#with Person}}{{fname}} {{sname}}{{/wi")({}),
-      { message: `Error (17) on 1:39 Unterminated "WITH" block at 1:7` }
+      { message: `Error (17) on 1:39 Unterminated "WITH" block at 1:7` },
     );
   });
 
   it("Unterminated WITH block test #3", () => {
     assert.throws(
       () => stubble.compile("{{#with Person}}{{fname}} {{sname}")({}),
-      { message: `Error (17) on 1:33 Unterminated "WITH" block at 1:7` }
+      { message: `Error (17) on 1:33 Unterminated "WITH" block at 1:7` },
     );
   });
 
@@ -1105,7 +1137,7 @@ describe("Block WITH templates test", () => {
       {
         message:
           'Error (9) on 1:42 Error: Error (5) on 1:13 Wrong character "&" found',
-      }
+      },
     );
   });
 });
@@ -1146,7 +1178,7 @@ describe("Block EACH templates test", () => {
         stubble.compile("{{#each}}{{num}};{{/each}}")({
           A: [{ num: 1 }, { num: 2 }, { num: 3 }, { num: 4 }],
         }),
-      { message: `Error (13) on 1:25 "EACH" block requires path as parameter` }
+      { message: `Error (13) on 1:25 "EACH" block requires path as parameter` },
     );
   });
 
@@ -1156,7 +1188,7 @@ describe("Block EACH templates test", () => {
         stubble.compile("{{#each A}}{{num}};{{/each}}")({ A: "some string" }),
       {
         message: `Error (14) on 1:27 "EACH" block data should have "Array" or "Object" type`,
-      }
+      },
     );
   });
 
@@ -1192,7 +1224,7 @@ describe("Block EACH templates test", () => {
         }),
       {
         message: `Error (9) on 1:29 Error: Error (5) on 1:3 Wrong character "!" found`,
-      }
+      },
     );
   });
 });
@@ -1203,7 +1235,7 @@ describe("Production tests", () => {
 
     assert.equal(
       stubble.compile(TPLS.tpl1)(DATA.data1),
-      "<center><ds><b>* BILL #123 *</b></ds></center><br><b><row><cell>Bill datetime</cell><cell align='right'>19.1.1970 / 09:38</cell></row></b><br><br>123123123"
+      "<center><ds><b>* BILL #123 *</b></ds></center><br><b><row><cell>Bill datetime</cell><cell align='right'>19.1.1970 / 09:38</cell></row></b><br><br>123123123",
     );
   });
 
@@ -1212,7 +1244,7 @@ describe("Production tests", () => {
 
     assert.equal(
       stubble.compile(TPLS.tpl2)(DATA.data2),
-      "Hi my name is John! I am 32 years old!"
+      "Hi my name is John! I am 32 years old!",
     );
   });
 
@@ -1221,7 +1253,7 @@ describe("Production tests", () => {
 
     assert.equal(
       stubble.compile(TPLS.tpl3)(DATA.data2),
-      "Helper result - abc; tes; 12.2; John"
+      "Helper result - abc; tes; 12.2; John",
     );
   });
 
@@ -1230,7 +1262,7 @@ describe("Production tests", () => {
 
     assert.equal(
       stubble.compile(TPLS.tpl4)({}),
-      "Block Helper result -  it works! "
+      "Block Helper result -  it works! ",
     );
   });
 });

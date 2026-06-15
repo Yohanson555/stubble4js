@@ -32,3 +32,7 @@ Available options: - `ignoreUnregisteredHelperErrors` - ignore errors of 'Unregi
 ## v 2.1.1
 
 - EACH and WITH blocks are now has a default value for situations, when context value is null or undefined
+
+## v 2.1.2
+
+- Bug fix: IF block conditions with comparison operators now correctly handle falsy left-hand values (e.g. `{{#if A == 0}}` with `A` equal to `0`, `""` or `false`). Previously such comparisons were short-circuited to `false` regardless of the right-hand value.
