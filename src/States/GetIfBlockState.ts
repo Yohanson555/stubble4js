@@ -15,6 +15,14 @@ import { StubbleResult } from "../StubbleResult";
 import { StubbleState } from "../StubbleState";
 import { StubbleContext } from "../StubbleContext";
 
+type IfBranchKind = "if" | "elseif" | "else";
+
+interface IfBranch {
+  kind: IfBranchKind;
+  condition?: string;
+  body: string;
+}
+
 export class GetIfBlockState implements StubbleState {
   private _res: boolean = false;
   private _body: string = "";
@@ -40,7 +48,7 @@ export class GetIfBlockState implements StubbleState {
 
   handleMessage(
     msg: StubbleMessage,
-    context: StubbleContext
+    context: StubbleContext,
   ): StubbleResult | null {
     if (msg instanceof ProcessMessage) {
       return this.process(msg, context);
@@ -60,7 +68,7 @@ export class GetIfBlockState implements StubbleState {
       return {
         err: new StubbleError(
           errors.ERROR_UNTERMINATED_BLOCK,
-          `Unterminated "IF" block at ${this._line}:${this._symbol}`
+          `Unterminated "IF" block at ${this._line}:${this._symbol}`,
         ),
       };
     } else if (charCode == chars.SPACE) {
@@ -106,27 +114,144 @@ export class GetIfBlockState implements StubbleState {
   }
 
   result(context: StubbleContext): StubbleResult {
-    let res: string = "";
+    const branches = this.splitBody(this._body);
 
-    try {
-      let fn = context.compile(this._body);
-      res = fn ? fn(context.data()) : "";
-    } catch (e) {
-      return {
-        err: new StubbleError(
-          errors.ERROR_IF_BLOCK_MALFORMED,
-          `If block error: ${e}`
-        ),
-      };
+    let selected: IfBranch | null = null;
+
+    for (let i = 0; i < branches.length; i++) {
+      const b = branches[i];
+      let ok = false;
+
+      if (b.kind === "if") {
+        ok = this._res === true;
+      } else if (b.kind === "elseif") {
+        try {
+          ok = this.evalElseifCondition(b.condition || "", context);
+        } catch (e) {
+          return {
+            err: new StubbleError(
+              errors.ERROR_IF_BLOCK_MALFORMED,
+              `If block error: ${e}`,
+            ),
+          };
+        }
+      } else {
+        ok = true;
+      }
+
+      if (ok) {
+        selected = b;
+        break;
+      }
     }
 
-    if (this._res !== true) {
-      res = "";
+    let res: string = "";
+
+    if (selected && selected.body) {
+      try {
+        let fn = context.compile(selected.body);
+        res = fn ? fn(context.data()) : "";
+      } catch (e) {
+        return {
+          err: new StubbleError(
+            errors.ERROR_IF_BLOCK_MALFORMED,
+            `If block error: ${e}`,
+          ),
+        };
+      }
     }
 
     return {
       pop: true,
       result: res,
     };
+  }
+
+  private splitBody(body: string): IfBranch[] {
+    const branches: IfBranch[] = [{ kind: "if", body: "" }];
+    let depth = 0;
+    let segmentStart = 0;
+    let esc = false;
+    let i = 0;
+
+    while (i < body.length) {
+      const ch = body[i];
+
+      if (ch === "\\" && !esc) {
+        esc = true;
+        i++;
+        continue;
+      }
+
+      if (ch === "{" && !esc && body[i + 1] === "{") {
+        let j = i + 2;
+        while (
+          j < body.length - 1 &&
+          !(body[j] === "}" && body[j + 1] === "}")
+        ) {
+          j++;
+        }
+
+        if (j >= body.length - 1) {
+          break;
+        }
+
+        const tag = body.slice(i + 2, j).trim();
+
+        if (depth === 0 && tag === "else") {
+          branches[branches.length - 1].body = body.slice(segmentStart, i);
+          branches.push({ kind: "else", body: "" });
+          segmentStart = j + 2;
+          i = j + 2;
+          continue;
+        }
+
+        if (depth === 0 && /^elseif(\s+|$)/.test(tag)) {
+          const cond = tag.replace(/^elseif\s*/, "");
+          branches[branches.length - 1].body = body.slice(segmentStart, i);
+          branches.push({ kind: "elseif", condition: cond, body: "" });
+          segmentStart = j + 2;
+          i = j + 2;
+          continue;
+        }
+
+        if (tag.charAt(0) === "#") {
+          depth++;
+        } else if (tag.charAt(0) === "/") {
+          depth--;
+        }
+
+        i = j + 2;
+        esc = false;
+        continue;
+      }
+
+      esc = false;
+      i++;
+    }
+
+    branches[branches.length - 1].body = body.slice(segmentStart);
+    return branches;
+  }
+
+  private evalElseifCondition(
+    condition: string,
+    context: StubbleContext,
+  ): boolean {
+    const cond = (condition || "").trim();
+
+    if (!cond) {
+      return false;
+    }
+
+    const probe = "\u0001ELSEIF_TRUE\u0001";
+    const tpl = `{{#if ${cond}}}${probe}{{/if}}`;
+    const fn = context.compile(tpl);
+
+    if (!fn) {
+      return false;
+    }
+
+    return fn(context.data()) === probe;
   }
 }

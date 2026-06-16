@@ -1009,6 +1009,112 @@ describe("Block IF templates test", () => {
     assert.equal(res, "true");
   });
 
+  // ELSE / ELSEIF branches
+
+  it("If/else #1 - else taken when condition is false", () => {
+    const tpl = "{{#if A == 1}}yes{{else}}no{{/if}}";
+    const res = stubble.compile(tpl)({ A: 2 });
+
+    assert.equal(res, "no");
+  });
+
+  it("If/else #2 - if taken, else ignored", () => {
+    const tpl = "{{#if A == 1}}yes{{else}}no{{/if}}";
+    const res = stubble.compile(tpl)({ A: 1 });
+
+    assert.equal(res, "yes");
+  });
+
+  it("If/else #3 - empty else body", () => {
+    const tpl = "{{#if A}}yes{{else}}{{/if}}";
+    const res = stubble.compile(tpl)({ A: false });
+
+    assert.equal(res, "");
+  });
+
+  it("If/elseif #1 - first elseif matches", () => {
+    const tpl =
+      "{{#if A == 1}}one{{elseif A == 2}}two{{elseif A == 3}}three{{/if}}";
+    const res = stubble.compile(tpl)({ A: 2 });
+
+    assert.equal(res, "two");
+  });
+
+  it("If/elseif #2 - second elseif matches", () => {
+    const tpl =
+      "{{#if A == 1}}one{{elseif A == 2}}two{{elseif A == 3}}three{{/if}}";
+    const res = stubble.compile(tpl)({ A: 3 });
+
+    assert.equal(res, "three");
+  });
+
+  it("If/elseif #3 - no branch matches, no else", () => {
+    const tpl =
+      "{{#if A == 1}}one{{elseif A == 2}}two{{elseif A == 3}}three{{/if}}";
+    const res = stubble.compile(tpl)({ A: 4 });
+
+    assert.equal(res, "");
+  });
+
+  it("If/elseif/else #1 - else fallback after all elseifs fail", () => {
+    const tpl = "{{#if A == 1}}one{{elseif A == 2}}two{{else}}other{{/if}}";
+    const res = stubble.compile(tpl)({ A: 5 });
+
+    assert.equal(res, "other");
+  });
+
+  it("If/elseif/else #2 - first elseif wins over else", () => {
+    const tpl = "{{#if A == 1}}one{{elseif A == 2}}two{{else}}other{{/if}}";
+    const res = stubble.compile(tpl)({ A: 2 });
+
+    assert.equal(res, "two");
+  });
+
+  it("If/elseif #4 - falsy value comparison in elseif (A == 0)", () => {
+    const tpl = "{{#if A == 1}}one{{elseif A == 0}}zero{{else}}other{{/if}}";
+    const res = stubble.compile(tpl)({ A: 0 });
+
+    assert.equal(res, "zero");
+  });
+
+  it("If/elseif #5 - operators in elseif (A < 5)", () => {
+    const tpl = "{{#if A > 10}}big{{elseif A < 5}}small{{else}}mid{{/if}}";
+    const res = stubble.compile(tpl)({ A: 2 });
+
+    assert.equal(res, "small");
+  });
+
+  it("If/else nested - inner else does not affect outer", () => {
+    const tpl =
+      "{{#if A == 1}}A{{#if B == 2}}B{{else}}notB{{/if}}{{else}}notA{{/if}}";
+    const data1 = { A: 1, B: 2 };
+    const data2 = { A: 1, B: 3 };
+    const data3 = { A: 9, B: 2 };
+
+    assert.equal(stubble.compile(tpl)(data1), "AB");
+    assert.equal(stubble.compile(tpl)(data2), "AnotB");
+    assert.equal(stubble.compile(tpl)(data3), "notA");
+  });
+
+  it("If/elseif nested - inner elseif does not affect outer", () => {
+    const tpl =
+      "{{#if A == 1}}{{#if B == 1}}AB{{elseif B == 2}}AC{{/if}}{{elseif A == 2}}X{{else}}Y{{/if}}";
+
+    assert.equal(stubble.compile(tpl)({ A: 1, B: 1 }), "AB");
+    assert.equal(stubble.compile(tpl)({ A: 1, B: 2 }), "AC");
+    assert.equal(stubble.compile(tpl)({ A: 1, B: 9 }), "");
+    assert.equal(stubble.compile(tpl)({ A: 2 }), "X");
+    assert.equal(stubble.compile(tpl)({ A: 9 }), "Y");
+  });
+
+  it("If/else - branch can contain other blocks", () => {
+    const tpl = "{{#if A}}{{#each items}}{{n}};{{/each}}{{else}}empty{{/if}}";
+    const items = [{ n: 1 }, { n: 2 }, { n: 3 }];
+
+    assert.equal(stubble.compile(tpl)({ A: true, items }), "1;2;3;");
+    assert.equal(stubble.compile(tpl)({ A: false, items }), "empty");
+  });
+
   /// incorrect if blocks
   ///
   it("Wrong IF block #1", () => {

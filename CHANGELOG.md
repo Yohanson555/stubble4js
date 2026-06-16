@@ -36,3 +36,7 @@ Available options: - `ignoreUnregisteredHelperErrors` - ignore errors of 'Unregi
 ## v 2.1.2
 
 - Bug fix: IF block conditions with comparison operators now correctly handle falsy left-hand values (e.g. `{{#if A == 0}}` with `A` equal to `0`, `""` or `false`). Previously such comparisons were short-circuited to `false` regardless of the right-hand value.
+
+## v 2.2.0
+
+- Added support for `{{else}}` and `{{elseif <condition>}}` branches inside an `{{#if}}` block. Branches are evaluated top-to-bottom, the first matching one is rendered, and `{{else}}` is used as a fallback when no condition matches. Nested IF blocks with their own `else`/`elseif` are handled correctly.

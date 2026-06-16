@@ -14,4 +14,6 @@ export declare class GetIfBlockState implements StubbleState {
     process(msg: ProcessMessage, context: StubbleContext): StubbleResult | null;
     notify(msg: NotifyMessage, context: StubbleContext): StubbleResult;
     result(context: StubbleContext): StubbleResult;
+    private splitBody;
+    private evalElseifCondition;
 }

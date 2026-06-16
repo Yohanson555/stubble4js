@@ -99,23 +99,115 @@ class GetIfBlockState {
         }
     }
     result(context) {
+        const branches = this.splitBody(this._body);
+        let selected = null;
+        for (let i = 0; i < branches.length; i++) {
+            const b = branches[i];
+            let ok = false;
+            if (b.kind === "if") {
+                ok = this._res === true;
+            }
+            else if (b.kind === "elseif") {
+                try {
+                    ok = this.evalElseifCondition(b.condition || "", context);
+                }
+                catch (e) {
+                    return {
+                        err: new StubbleError_1.StubbleError(errors.ERROR_IF_BLOCK_MALFORMED, `If block error: ${e}`),
+                    };
+                }
+            }
+            else {
+                ok = true;
+            }
+            if (ok) {
+                selected = b;
+                break;
+            }
+        }
         let res = "";
-        try {
-            let fn = context.compile(this._body);
-            res = fn ? fn(context.data()) : "";
-        }
-        catch (e) {
-            return {
-                err: new StubbleError_1.StubbleError(errors.ERROR_IF_BLOCK_MALFORMED, `If block error: ${e}`),
-            };
-        }
-        if (this._res !== true) {
-            res = "";
+        if (selected && selected.body) {
+            try {
+                let fn = context.compile(selected.body);
+                res = fn ? fn(context.data()) : "";
+            }
+            catch (e) {
+                return {
+                    err: new StubbleError_1.StubbleError(errors.ERROR_IF_BLOCK_MALFORMED, `If block error: ${e}`),
+                };
+            }
         }
         return {
             pop: true,
             result: res,
         };
+    }
+    splitBody(body) {
+        const branches = [{ kind: "if", body: "" }];
+        let depth = 0;
+        let segmentStart = 0;
+        let esc = false;
+        let i = 0;
+        while (i < body.length) {
+            const ch = body[i];
+            if (ch === "\\" && !esc) {
+                esc = true;
+                i++;
+                continue;
+            }
+            if (ch === "{" && !esc && body[i + 1] === "{") {
+                let j = i + 2;
+                while (j < body.length - 1 &&
+                    !(body[j] === "}" && body[j + 1] === "}")) {
+                    j++;
+                }
+                if (j >= body.length - 1) {
+                    break;
+                }
+                const tag = body.slice(i + 2, j).trim();
+                if (depth === 0 && tag === "else") {
+                    branches[branches.length - 1].body = body.slice(segmentStart, i);
+                    branches.push({ kind: "else", body: "" });
+                    segmentStart = j + 2;
+                    i = j + 2;
+                    continue;
+                }
+                if (depth === 0 && /^elseif(\s+|$)/.test(tag)) {
+                    const cond = tag.replace(/^elseif\s*/, "");
+                    branches[branches.length - 1].body = body.slice(segmentStart, i);
+                    branches.push({ kind: "elseif", condition: cond, body: "" });
+                    segmentStart = j + 2;
+                    i = j + 2;
+                    continue;
+                }
+                if (tag.charAt(0) === "#") {
+                    depth++;
+                }
+                else if (tag.charAt(0) === "/") {
+                    depth--;
+                }
+                i = j + 2;
+                esc = false;
+                continue;
+            }
+            esc = false;
+            i++;
+        }
+        branches[branches.length - 1].body = body.slice(segmentStart);
+        return branches;
+    }
+    evalElseifCondition(condition, context) {
+        const cond = (condition || "").trim();
+        if (!cond) {
+            return false;
+        }
+        const probe = "\u0001ELSEIF_TRUE\u0001";
+        const tpl = `{{#if ${cond}}}${probe}{{/if}}`;
+        const fn = context.compile(tpl);
+        if (!fn) {
+            return false;
+        }
+        return fn(context.data()) === probe;
     }
 }
 exports.GetIfBlockState = GetIfBlockState;

@@ -1,6 +1,6 @@
 {
   "name": "stubble4js",
-  "version": "2.1.2",
+  "version": "2.2.0",
   "description": "Stubble realization for javascript",
   "main": "dist/Stubble.js",
   "typings": "dist/Stubble.d.ts",
