@@ -40,3 +40,8 @@ Available options: - `ignoreUnregisteredHelperErrors` - ignore errors of 'Unregi
 ## v 2.2.0
 
 - Added support for `{{else}}` and `{{elseif <condition>}}` branches inside an `{{#if}}` block. Branches are evaluated top-to-bottom, the first matching one is rendered, and `{{else}}` is used as a fallback when no condition matches. Nested IF blocks with their own `else`/`elseif` are handled correctly.
+
+## v 2.2.1
+
+- Security: fixed 15 vulnerabilities (2 low, 4 moderate, 8 high, 1 critical) reported by `npm audit` in transitive devDependencies (`@babel/core`, `@babel/traverse`, `@babel/helpers`, `braces`, `cross-spawn`, `json5`, `lodash`, `micromatch`, `minimatch`, `moment`, `picomatch`, `semver`, etc.) via `npm audit fix`.
+- Security: forced `js-yaml` to `^4.2.0` through `overrides` in `package.json` to close the remaining 18 moderate advisories (GHSA-h67p-54hq-rp68, GHSA-mh29-5h37-fv8m) coming from the `babel-plugin-istanbul` → `@istanbuljs/load-nyc-config` coverage chain, without downgrading `ts-jest`.
